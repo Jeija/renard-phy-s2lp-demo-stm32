@@ -91,7 +91,7 @@ int main(void)
 
 	/* Use current sequence number as (really bad) entropy source for uplink frequency randomization */
 	uint16_t current_seqnum = next_seqnum();
-	renard_phy_s2lp_protocol_init(current_seqnum, UL_DATARATE_100BPS);
+	renard_phy_s2lp_protocol_init(current_seqnum);
 
 	printf("[renard-phy-s2lp-demo-stm32] Initialization complete!\r\n");
 
@@ -116,7 +116,8 @@ int main(void)
 
 			sfx_dl_plain downlink;
 			int16_t downlink_rssi;
-			int err = renard_phy_s2lp_protocol_transfer(&common, &uplink, &downlink, &downlink_rssi);
+			int err = renard_phy_s2lp_protocol_transfer(&common, &uplink, &downlink, PROFILE_RC1, UL_DATARATE_100BPS,
+					&downlink_rssi);
 
 			if (err == PROTOCOL_ERROR_NONE) {
 				if (uplink.request_downlink) {
