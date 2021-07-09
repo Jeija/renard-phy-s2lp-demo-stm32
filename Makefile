@@ -156,18 +156,18 @@ $(GDBCFG_DIR):
 # flash firmware to board
 #######################################
 openocd-flash: $(BUILD_DIR)/$(TARGET).bin
-	st-flash reset
-	$(OPENOCD) -f interface/stlink-v2-1.cfg -f target/stm32l0.cfg -c "program $< reset exit 0x8000000"
+	st-flash --connect-under-reset reset
+	$(OPENOCD) -f interface/stlink.cfg -f target/stm32l0.cfg -c "program $< reset exit 0x8000000"
 
 stlink-flash: $(BUILD_DIR)/$(TARGET).bin
-	st-flash write $< 0x8000000
+	st-flash --connect-under-reset write $< 0x8000000
 
 #######################################
 # debug using gdb + openocd
 #######################################
 # First start openocd, then only use gdb-flash and gdb-debug to connect to target, no stlink / openocd-flash!
 openocd:
-	openocd -f interface/stlink-v2-1.cfg -f target/stm32l0.cfg
+	openocd -f interface/stlink.cfg -f target/stm32l0.cfg
 
 gdb-flash: $(BUILD_DIR)/$(TARGET).elf $(GDBCFG_DIR)
 	echo "target remote localhost:3333" > $(GDBCFG_DIR)/flash.cfg
